@@ -44,14 +44,15 @@ class Algorithm:
             if self.debug:
                 print(curr_book)
                 print(self.processed_libraries)
-            library_list = list(set(self.libs_by_book_hash[curr_book]).difference(self.processed_libraries))
+            library_list = [lib for lib in self.libs_by_book_hash[curr_book] if lib.index not in self.processed_libraries]
             if len(library_list) == 0:
                 continue     
             scores = [lib.estimated_score(self.remaining_days) if lib.index not in self.processed_libraries else 0 for lib in library_list]
             if self.debug:
                 print(scores)
             lib_selected = library_list[np.argmax(scores)]
-            self.processed_libraries.union([lib_selected.index])
+            
+            self.processed_libraries = self.processed_libraries.union([lib_selected.index])
             
             books_in_lib = lib_selected.get_scanned_books(self.remaining_days)
             
@@ -103,7 +104,7 @@ class Library:
     def sort_books(self):
         scores_filtered = [self.scores[j] for j in range(len(self.scores)) if j in self.books]
         indexes = list(range(len(self.books)))
-        indexes.sort(key=scores_filtered.__getitem__)
+        indexes.sort(key=scores_filtered.__getitem__, reverse=True)
         sorted_books = list(map(self.books.__getitem__, indexes))
         sorted_scores = list(map(scores_filtered.__getitem__, indexes))
         self.sorted_tuples = np.asarray([sorted_books, sorted_scores])
