@@ -1,8 +1,10 @@
 import numpy as np
+from collections import defaultdict
 
 class Algorithm:
     def __init__(self, book_scores, available_days, library_tuples, debug=False):
         self.debug = debug
+        self.library_tuples = library_tuples
 
         self.books_count = len(book_scores)
         self.book_scores = book_scores
@@ -18,18 +20,40 @@ class Algorithm:
         # TODO libraries?
 
     def create_libs_by_book_hash(self, library_tuples):
-        libs_by_books = {}
-        for i in range(self.books_count):
-            libs_by_books[i] = []
-            for lib_index, (signup_days, scanning_count, books) in enumerate(library_tuples):
-                lib = Library(lib_index, books, self.book_scores, signup_days, scanning_count)
-                if i in lib.books:
-                    libs_by_books[i].append(lib)
+        if self.debug:
+            print("create libs hash")
+        # libs_by_books = {}
+        # for i in range(self.books_count):
+        #     libs_by_books[i] = []
+        #     for lib_index, (signup_days, scanning_count, books) in enumerate(library_tuples):
+        #         lib = Library(lib_index, books, self.book_scores, signup_days, scanning_count)
+        #         if i in lib.books:
+        #             libs_by_books[i].append(lib)
+
+        libs_by_books = defaultdict(list)
+        for lib_index, (signup_days, scanning_count, books) in enumerate(library_tuples):
+            lib = Library(lib_index, books, self.book_scores, signup_days, scanning_count)
+            for i in books:
+                libs_by_books[i].append(lib)
         return libs_by_books
         
 
     def sort_books_by_score(self):
+        if self.debug:
+            print("start sort books")
         return sorted(range(len(self.book_scores)), key=lambda x:self.book_scores[x], reverse=True)
+
+    def find_solution_2(self):
+        signup_times = [lib[0] for lib in self.library_tuples]
+        sort_ind = np.argsort(signup_times)
+        self.solution = []
+        for s in sort_ind:
+            if self.remaining_days <= 0:
+                break
+            self.remaining_days -= self.library_tuples[s][0]
+            self.solution.append((s, self.library_tuples[s][2]))
+        return self.solution
+            
 
     def find_solution(self):
 

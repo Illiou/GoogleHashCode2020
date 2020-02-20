@@ -11,7 +11,7 @@ RUN_ONE = not RUN_ALL
 INPUT_PATH = "./input/"
 ALL_PROBLEM_FILES = ["a_example.txt", "b_read_on.txt", "c_incunabula.txt", "d_tough_choices.txt", "e_so_many_books.txt", "f_libraries_of_the_world.txt"]
 
-PROBLEM_NUM = 0
+PROBLEM_NUM = 2
 PROBLEM_FILE = ALL_PROBLEM_FILES[PROBLEM_NUM]
 
 OUTPUT_PATH = "./output/"
