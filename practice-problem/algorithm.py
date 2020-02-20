@@ -8,10 +8,11 @@ class Algorithm:
         self.solution = None
 
     def find_solution(self):
-        self.solution = (0,)
+        self.solution = (0,[])
+        return self.solution
 
     def verify_solution(self):
-        pass
+        return True
 
     def score_solution(self):
         pass

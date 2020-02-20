@@ -1,5 +1,5 @@
-from .utilities import *
-from .algorithm import *
+from utilities import *
+from algorithm import *
 
 
 # ---------------- Settings ----------------
@@ -10,16 +10,37 @@ RUN_ONE = not RUN_ALL
 
 INPUT_PATH = "./input/"
 ALL_PROBLEM_FILES = ["a_example.in", "b_small.in", "c_medium.in", "d_quite_big.in", "e_also_big.in"]
-PROBLEM_FILE = ALL_PROBLEM_FILES[0]
+
+PROBLEM_NUM = 0
+PROBLEM_FILE = ALL_PROBLEM_FILES[PROBLEM_NUM]
 
 OUTPUT_PATH = "./output/"
 
+RUN_TIME = get_current_time_for_filename()
 
 # ---------------- Run Single Input ----------------
 
 if RUN_ONE:
+    start_time = current_milli_time()
     input = load_input_file(INPUT_PATH + PROBLEM_FILE)
-    print(input)
+    if DEBUG:
+        print(input)
+    algo = Algorithm(input, debug=DEBUG)
+    algo.find_solution()
+    end_time = current_milli_time()
+
+    if algo.verify_solution():
+        solution_score = algo.score_solution()
+        if DEBUG:
+            print(f"Solution score: {solution_score}")
+        filename = f"problem-{PROBLEM_NUM}_score-{solution_score}_{RUN_TIME}.txt"
+        save_solution_file(algo.solution, OUTPUT_PATH + filename)
+    else:
+        print("Solution invalid")
+        print(algo.solution)
+        print()
+
+    print(f"Finished in {end_time - start_time} ms")
 
 
 # ---------------- Run All ----------------
