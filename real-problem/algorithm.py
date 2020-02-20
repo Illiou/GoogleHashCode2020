@@ -1,10 +1,10 @@
 import numpy as np
 
 class Algorithm:
-    def __init__(self, book_scores, available_days, libraries, debug=False):
+    def __init__(self, book_scores, available_days, library_tuples, debug=False):
         self.debug = debug
 
-        self.books_count = len(self.book_scores)
+        self.books_count = len(book_scores)
         self.book_scores = book_scores
         self.books_by_score = self.sort_books_by_score()
         
@@ -12,31 +12,34 @@ class Algorithm:
         self.scanned_books = set()
         self.remaining_days = available_days
         
-        self.libs_by_book_hash = self.create_libs_by_book_hash(libraries)
+        self.libs_by_book_hash = self.create_libs_by_book_hash(library_tuples)
 
         # TODO libraries?
 
-    def create_libs_by_book_hash(self, libraries):
+    def create_libs_by_book_hash(self, library_tuples):
         libs_by_books = {}
         for i in range(self.books_count):
             libs_by_books[i] = []
-            for lib in libraries:
+            for lib_index, (signup_days, scanning_count, books) in enumerate(library_tuples):
+                lib = Library(lib_index, books, self.book_scores, signup_days, scanning_count)
                 if i in lib.books:
                     libs_by_books[i].append(lib)
         return libs_by_books
         
 
     def sort_books_by_score(self):
-        return np.argsort(self.book_scores, reverse=True)
+        return sorted(range(len(self.book_scores)), key=lambda x:self.book_scores[x], reverse=True)
 
     def find_solution(self):
         self.solution = []
         for i in range(self.books_count):
+            if self.remaining_days <= 0:
+                break
             curr_book = self.books_by_score[i]
             if curr_book in self.scanned_books:
                 # book is already scanned
                 continue
-            library_list = self.libs_by_book_hash[curr_book] # not implemented yet
+            library_list = self.libs_by_book_hash[curr_book]
             
             scores = [lib.estimated_score(self.remaining_days) for lib in library_list]
             lib_selected = library_list[np.argmax(scores)]
@@ -47,7 +50,7 @@ class Algorithm:
             
             # add the library to our solution
             # add all book feasible in the remaining time and add to scanned books    
-            self.scanned_books.union(books_in_lib) # TODO: as set such that unique books
+            self.scanned_books.union(books_in_lib)
 
             self.remaining_days -= lib_selected.days_to_signup
 
@@ -75,7 +78,7 @@ class Library:
 
     def get_scanned_books(self, remaining_days):
         num_books = (remaining_days - self.days_to_signup) * self.scans_per_day 
-        return sorted_tuples[0, :num_books]
+        return self.sorted_tuples[0, :num_books]
 
     def estimated_score(self, remaining_days):
         productive_days = remaining_days - self.days_to_signup
@@ -86,9 +89,11 @@ class Library:
         return score_sum # self.books[:num_books]
     
     def sort_books(self):
-        self.books.sort(key=self.scores)
-        sorted_books = 
-        sorted_scores = 
+        scores_filtered = [self.scores[j] for j in range(len(self.scores)) if j in self.books]
+        indexes = list(range(len(self.books)))
+        indexes.sort(key=scores_filtered.__getitem__)
+        sorted_books = list(map(self.books.__getitem__, indexes))
+        sorted_scores = list(map(scores_filtered.__getitem__, indexes))
         self.sorted_tuples = np.asarray([sorted_books, sorted_scores])
         self.sorted = True
         
