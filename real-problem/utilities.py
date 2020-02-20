@@ -20,7 +20,7 @@ def load_input_file(filepath):
             else:
                 books = line.split()
             libraries.append((signup_days, shipping_count, books))
-    return total_book_count, available_days, libraries
+    return total_books, available_days, libraries
 
 
 def save_solution_file(solution, filepath):
