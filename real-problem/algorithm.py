@@ -60,7 +60,8 @@ class Algorithm:
         return True
 
     def score_solution(self):
-        return sum(self.book_scores[b] for _, books in self.solution for b in books)
+        scanned_books = set(b for _, books in self.solution for b in books)
+        return sum(self.book_scores[b] for b in scanned_books)
             
 
 
@@ -89,7 +90,9 @@ class Library:
         return score_sum # self.books[:num_books]
     
     def sort_books(self):
+        print("books", self.books, "scores", self.scores)
         scores_filtered = [self.scores[j] for j in range(len(self.scores)) if j in self.books]
+        print("scores_filtered", scores_filtered)
         indexes = list(range(len(self.books)))
         indexes.sort(key=scores_filtered.__getitem__)
         sorted_books = list(map(self.books.__getitem__, indexes))
