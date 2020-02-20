@@ -22,12 +22,14 @@ RUN_TIME = get_current_time_for_filename()
 
 if RUN_ONE:
     start_time = current_milli_time()
-    input = load_input_file(INPUT_PATH + PROBLEM_FILE)
+    book_scores, available_days, libraries = load_input_file(INPUT_PATH + PROBLEM_FILE)
     if DEBUG:
-        print(input)
-    algo = Algorithm(input, debug=DEBUG)
+        print(book_scores, available_days, libraries)
+    algo = Algorithm(book_scores, available_days, libraries, debug=DEBUG)
     algo.find_solution()
     end_time = current_milli_time()
+
+    algo.solution = [(1, [5,2,3]), (0, [0,1,2,3,4])] # TODO remove
 
     if algo.verify_solution():
         solution_score = algo.score_solution()
