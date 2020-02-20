@@ -15,6 +15,8 @@ def load_input_file(filepath):
         book_scores = str_array_to_int_array(f.readline().split())
         libraries = []
         for i, line in enumerate(f):
+            if line.strip() == "":
+                continue
             if i % 2 == 0:
                 book_count, signup_days, scanning_count = str_array_to_int_array(line.split())
             else:
