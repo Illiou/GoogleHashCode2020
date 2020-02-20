@@ -3,6 +3,10 @@
 # VS Code settings
 .vscode/
 
+# Mac shit
+*.icloud
+.DS_Store
+
 #---------
 
 # Byte-compiled / optimized / DLL files
