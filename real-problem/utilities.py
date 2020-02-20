@@ -6,7 +6,7 @@ def current_milli_time():
 
 
 def get_current_time_for_filename():
-    return time.strftime("%Y-%m-%d-%H-%M-%S")
+    return time.strftime("%Y-%m-%d_%H-%M-%S")
 
 
 def load_input_file(filepath):
