@@ -9,6 +9,7 @@ class Algorithm:
         self.books_count = len(book_scores)
         self.book_scores = book_scores
         self.books_by_score = self.sort_books_by_score()
+        self.library_tuples = library_tuples
         
         self.solution = None
         self.scanned_books = set()
@@ -79,6 +80,8 @@ class Algorithm:
             self.processed_libraries = self.processed_libraries.union([lib_selected.index])
             
             books_in_lib = lib_selected.get_scanned_books(self.remaining_days)
+            if len(books_in_lib) == 0:
+                continue
             
             if self.debug:
                 print("library", lib_selected.index, books_in_lib)
@@ -90,6 +93,17 @@ class Algorithm:
 
             self.remaining_days -= lib_selected.days_to_signup
 
+        return self.solution
+
+    def find_solution_2(self):
+        signup_times = [lib[0] for lib in self.library_tuples]
+        sort_ind = np.argsort(signup_times)
+        self.solution = []
+        for s in sort_ind:
+            if self.remaining_days <= 0:
+                break
+            self.remaining_days -= self.library_tuples[s][0]
+            self.solution.append((s, self.library_tuples[s][2]))
         return self.solution
 
     def verify_solution(self):
