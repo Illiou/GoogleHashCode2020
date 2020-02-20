@@ -16,10 +16,10 @@ def load_input_file(filepath):
         libraries = []
         for i, line in enumerate(f):
             if i % 2 == 0:
-                book_count, signup_days, shipping_count = line.split()
+                book_count, signup_days, scanning_count = line.split()
             else:
                 books = line.split()
-                libraries.append((signup_days, shipping_count, books))
+                libraries.append((signup_days, min(scanning_count, book_count), books))
     return total_books, available_days, libraries
 
 
