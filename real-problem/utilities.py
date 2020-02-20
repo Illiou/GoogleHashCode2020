@@ -19,7 +19,7 @@ def load_input_file(filepath):
                 book_count, signup_days, shipping_count = line.split()
             else:
                 books = line.split()
-            libraries.append((signup_days, shipping_count, books))
+                libraries.append((signup_days, shipping_count, books))
     return total_books, available_days, libraries
 
 
