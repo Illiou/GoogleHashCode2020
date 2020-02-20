@@ -11,10 +11,16 @@ def get_current_time_for_filename():
 
 def load_input_file(filepath):
     with open(filepath, "r") as f:
-        lines = f.readlines()
-        slices_max, type_count = lines[0].split()
-        pizza_types = lines[1].split()
-    return slices_max, type_count, pizza_types
+        total_book_count, library_count, available_days = f.readline().split()
+        total_books = f.readline().split()
+        libraries = []
+        for i, line in enumerate(f):
+            if i % 2 == 0:
+                book_count, signup_days, shipping_count = line.split()
+            else:
+                books = line.split()
+            libraries.append((signup_days, shipping_count, books))
+    return total_book_count, available_days, libraries
 
 
 def save_solution_file(solution, filepath):
