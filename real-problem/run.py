@@ -29,12 +29,11 @@ if RUN_ONE:
     algo.find_solution()
     end_time = current_milli_time()
 
-    algo.solution = [(1, [5,2,3]), (0, [0,1,2,3,4])] # TODO remove
-
     if algo.verify_solution():
         solution_score = algo.score_solution()
         if DEBUG:
             print(f"Solution score: {solution_score}")
+            print(f"Solution: {algo.solution}")
         filename = f"problem-{PROBLEM_NUM}_score-{solution_score}_{RUN_TIME}.txt"
         save_solution_file(algo.solution, OUTPUT_PATH + filename)
     else:

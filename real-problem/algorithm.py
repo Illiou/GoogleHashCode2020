@@ -10,6 +10,7 @@ class Algorithm:
         
         self.solution = None
         self.scanned_books = set()
+        self.processed_libraries = set()
         self.remaining_days = available_days
         
         self.libs_by_book_hash = self.create_libs_by_book_hash(library_tuples)
@@ -31,6 +32,7 @@ class Algorithm:
         return sorted(range(len(self.book_scores)), key=lambda x:self.book_scores[x], reverse=True)
 
     def find_solution(self):
+
         self.solution = []
         for i in range(self.books_count):
             if self.remaining_days <= 0:
@@ -39,13 +41,22 @@ class Algorithm:
             if curr_book in self.scanned_books:
                 # book is already scanned
                 continue
-            library_list = self.libs_by_book_hash[curr_book]
-            
-            scores = [lib.estimated_score(self.remaining_days) for lib in library_list]
+            if self.debug:
+                print(curr_book)
+                print(self.processed_libraries)
+            library_list = list(set(self.libs_by_book_hash[curr_book]).difference(self.processed_libraries))
+            if len(library_list) == 0:
+                continue     
+            scores = [lib.estimated_score(self.remaining_days) if lib.index not in self.processed_libraries else 0 for lib in library_list]
+            if self.debug:
+                print(scores)
             lib_selected = library_list[np.argmax(scores)]
+            self.processed_libraries.union([lib_selected.index])
             
-            books_in_lib = lib_selected.get_scanned_books(self.remaining_days) # ?? somehow get the books in the chosen library which can be scanned in the remaining days
-            # TODO: save books_in_lib für die solution
+            books_in_lib = lib_selected.get_scanned_books(self.remaining_days)
+            
+            if self.debug:
+                print("library", lib_selected.index, books_in_lib)
             self.solution.append((lib_selected.index, books_in_lib))
             
             # add the library to our solution
@@ -90,9 +101,7 @@ class Library:
         return score_sum # self.books[:num_books]
     
     def sort_books(self):
-        print("books", self.books, "scores", self.scores)
         scores_filtered = [self.scores[j] for j in range(len(self.scores)) if j in self.books]
-        print("scores_filtered", scores_filtered)
         indexes = list(range(len(self.books)))
         indexes.sort(key=scores_filtered.__getitem__)
         sorted_books = list(map(self.books.__getitem__, indexes))
