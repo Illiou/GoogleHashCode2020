@@ -79,6 +79,8 @@ class Algorithm:
             self.processed_libraries = self.processed_libraries.union([lib_selected.index])
             
             books_in_lib = lib_selected.get_scanned_books(self.remaining_days)
+            if len(books_in_lib) == 0:
+                continue
             
             if self.debug:
                 print("library", lib_selected.index, books_in_lib)
